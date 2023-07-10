@@ -17,7 +17,7 @@ repos:
 
   # Autoformat: Python code, syntax patterns are modernized
   - repo: https://github.com/asottile/pyupgrade
-    rev: v3.4.0
+    rev: v3.8.0
     hooks:
       - id: pyupgrade
         args:
@@ -43,7 +43,7 @@ repos:
 
   # Run `terraform fmt` on all our terraform files automatically
   - repo: https://github.com/yuvipanda/terraform-bin
-    rev: v2.0.0
+    rev: v3.0.0
     hooks:
       - id: terraform-fmt
 

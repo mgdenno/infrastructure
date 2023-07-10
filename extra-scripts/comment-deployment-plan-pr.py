@@ -64,7 +64,9 @@ if artifact_id is None:
     sys.exit()
 
 # Download the artifact
-url = "/".join([api_url, "repos", repo, "actions", "artifacts", artifact_id, "zip"])
+url = "/".join(
+    [api_url, "repos", repo, "actions", "artifacts", str(artifact_id), "zip"]
+)
 response = requests.get(url, headers=headers, stream=True)
 
 # Extract the zip archive
@@ -111,7 +113,7 @@ comment_id = next(
 
 if comment_id is not None:
     # Comment exists - update it
-    url = "/".join([api_url, "repos", repo, "issues", "comments", comment_id])
+    url = "/".join([api_url, "repos", repo, "issues", "comments", str(comment_id)])
     requests.patch(url, headers=headers, json=body)
 else:
     # Comment doesn't exist - create a new one

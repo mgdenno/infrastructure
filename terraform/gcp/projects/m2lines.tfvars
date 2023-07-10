@@ -22,13 +22,16 @@ user_buckets = {
   },
   # For https://2i2c.freshdesk.com/a/tickets/218
   "persistent" : {
-    "delete_after" : null
+    "delete_after" : null,
+    "extra_admin_members" : ["group:m2lines-persistent-bucket-writers@googlegroups.com"]
   },
   "persistent-staging" : {
-    "delete_after" : null
+    "delete_after" : null,
+    "extra_admin_members" : ["group:m2lines-persistent-bucket-writers@googlegroups.com"]
   },
   "public-persistent" : {
-    "delete_after" : null
+    "delete_after" : null,
+    "extra_admin_members" : ["group:m2lines-persistent-bucket-writers@googlegroups.com"]
   },
 
 }
@@ -39,57 +42,32 @@ notebook_nodes = {
     min : 0,
     max : 100,
     machine_type : "n1-standard-2",
-    labels : {},
-    gpu : {
-      enabled : false,
-      type : "",
-      count : 0
-    }
   },
   "medium" : {
     min : 0,
     max : 100,
     machine_type : "n1-standard-4",
-    labels : {},
-    gpu : {
-      enabled : false,
-      type : "",
-      count : 0
-    }
   },
   "large" : {
     min : 0,
     max : 100,
     machine_type : "n1-standard-8",
-    labels : {},
-    gpu : {
-      enabled : false,
-      type : "",
-      count : 0
-    }
   },
   "huge" : {
     min : 0,
     max : 100,
     machine_type : "n1-standard-16",
-    labels : {},
-    gpu : {
-      enabled : false,
-      type : "",
-      count : 0
-    }
   },
   "gpu-t4" : {
     min : 0,
     max : 100,
     machine_type : "n1-standard-8",
-    labels : {},
     gpu : {
       enabled : true,
       type : "nvidia-tesla-t4",
       count : 1
     }
-  },
+  }
 }
 
 dask_nodes = {
@@ -97,45 +75,21 @@ dask_nodes = {
     min : 0,
     max : 100,
     machine_type : "n1-standard-2",
-    labels : {},
-    gpu : {
-      enabled : false,
-      type : "",
-      count : 0
-    }
   },
   "medium" : {
     min : 0,
     max : 100,
     machine_type : "n1-standard-4",
-    labels : {},
-    gpu : {
-      enabled : false,
-      type : "",
-      count : 0
-    }
   },
   "large" : {
     min : 0,
     max : 100,
     machine_type : "n1-standard-8",
-    labels : {},
-    gpu : {
-      enabled : false,
-      type : "",
-      count : 0
-    }
   },
   "huge" : {
     min : 0,
     max : 100,
     machine_type : "n1-standard-16",
-    labels : {},
-    gpu : {
-      enabled : false,
-      type : "",
-      count : 0
-    }
   },
 }
 
@@ -148,10 +102,7 @@ hub_cloud_permissions = {
   "prod" : {
     requestor_pays : true,
     bucket_admin_access : ["scratch", "persistent", "public-persistent"],
+    bucket_public_access : ["public-persistent"],
     hub_namespace : "prod"
   },
 }
-
-bucket_public_access = [
-  "public-persistent"
-]

@@ -1,8 +1,8 @@
 jupyterhub:
   singleuser:
     memory:
-      limit: 7G
-      guarantee: 5G
+      limit: 16G
+      guarantee: 10G
     nodeSelector:
       2i2c.org/community: climatematch
     extraTolerations:
@@ -29,8 +29,8 @@ jupyterhub:
       templateVars:
         org:
           name: ClimateMatch Academy
-          # Logo picked up from https://academy.climatematch.io/
-          logo_url: https://lh5.googleusercontent.com/jiClOwOU8X41s0wnAtRniiTqMXgylAyeXlKGQbzmeeJF8rpU1_CGkaHa6YA6chNcFrKfI0a4m2zNl_Hfy4Dk2JSyBKtrept5Cuwm1m65mkIMRZtUQMQxa7IIEfhSL6fDDg=w1280
+          # Logo copied from https://academy.climatematch.io/
+          logo_url: https://github.com/2i2c-org/infrastructure/assets/3837114/ac3ec52f-1e62-440a-b2bd-8052e5f38897
           url: https://academy.climatematch.io/
         designed_by:
           name: 2i2c

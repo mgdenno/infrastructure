@@ -14,41 +14,45 @@ regional_cluster = false
 enable_filestore      = true
 filestore_capacity_gb = 2560
 
-# Some hubs want a storage bucket, so we need to have config connector enabled
-config_connector_enabled = true
-
 notebook_nodes = {
   "user" : {
     min : 0,
     max : 20,
     machine_type : "n1-highmem-4",
-    labels : {},
-    gpu : {
-      enabled : false,
-      type : "",
-      count : 0
-    }
   },
-  "climatematch": {
-    min: 0,
-    max: 100,
-    machine_type: "n1-highmem-2",
-    labels: {
-      "2i2c.org/community": "climatematch"
+  "climatematch" : {
+    min : 0,
+    max : 100,
+    machine_type : "n2-highmem-32",
+    labels : {
+      "2i2c.org/community" : "climatematch"
     },
-    taints: [{
-      key: "2i2c.org/community",
-      value: "climatematch",
-      effect: "NO_SCHEDULE"
+    taints : [{
+      key : "2i2c.org/community",
+      value : "climatematch",
+      effect : "NO_SCHEDULE"
     }],
-    gpu: {
-      enabled: false,
-      type: "",
-      count: 0
+    resource_labels : {
+      "community" : "climatematch"
     },
-    resource_labels: {
-      "community": "climatematch"
-    }
+  },
+  # Nodepool for neurohackademy. Tracking issue: https://github.com/2i2c-org/infrastructure/issues/2681
+  "neurohackademy" : {
+    # We expect around 120 users
+    min : 0,
+    max : 100,
+    machine_type : "n1-highmem-16",
+    labels : {
+      "2i2c.org/community" : "neurohackademy"
+    },
+    taints : [{
+      key : "2i2c.org/community",
+      value : "neurohackademy",
+      effect : "NO_SCHEDULE"
+    }],
+    resource_labels : {
+      "community" : "neurohackademy"
+    },
   }
 }
 
@@ -57,12 +61,6 @@ dask_nodes = {
     min : 0,
     max : 100,
     machine_type : "n1-highmem-4",
-    labels : {},
-    gpu : {
-      enabled : false,
-      type : "",
-      count : 0
-    }
   }
 }
 

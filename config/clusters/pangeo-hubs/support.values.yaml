@@ -36,12 +36,7 @@ prometheus:
           hosts:
             - prometheus.gcp.pangeo.2i2c.cloud
     resources:
-      # This prometheus instance has required 13+ GB to startup successfully in
-      # the past (2023-02-17) when replaying the "write-ahead log" (WAL) stored
-      # on on disk when it starts up. For more details, see the comments next to
-      # the default values in helm-charts/support/values.yaml.
-      #
       requests:
-        memory: 20Gi
+        memory: 16Gi
       limits:
-        memory: 20Gi
+        memory: 16Gi

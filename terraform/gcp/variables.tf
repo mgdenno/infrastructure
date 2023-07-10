@@ -33,10 +33,10 @@ variable "k8s_version_prefixes" {
   # channel, so we may want to remove or add minor versions here over time.
   #
   default = [
-    "1.22.",
-    "1.23.",
     "1.24.",
     "1.25.",
+    "1.26.",
+    "1.27.",
     "1.",
   ]
   description = <<-EOT
@@ -69,14 +69,22 @@ variable "notebook_nodes" {
     min : number,
     max : number,
     machine_type : string,
-    labels : map(string),
+    labels : optional(map(string), {}),
     taints : optional(list(object({
       key : string,
       value : string,
       effect : string
     })), [])
-    gpu : object({ enabled : bool, type : string, count : number }),
-    resource_labels : optional(map(string), {})
+    gpu : optional(
+      object({
+        enabled : optional(bool, false),
+        type : optional(string, ""),
+        count : optional(number, 1)
+      }),
+      {}
+    ),
+    resource_labels : optional(map(string), {}),
+    zones : optional(list(string), [])
   }))
   description = "Notebook node pools to create"
   default     = {}
@@ -88,35 +96,26 @@ variable "dask_nodes" {
     max : number,
     preemptible : optional(bool, true),
     machine_type : string,
-    labels : map(string),
+    labels : optional(map(string), {}),
     taints : optional(list(object({
       key : string,
       value : string,
       effect : string
     })), [])
-    gpu : object({ enabled : bool, type : string, count : number }),
-    resource_labels : optional(map(string), {})
+    gpu : optional(
+      object({
+        enabled : optional(bool, false),
+        type : optional(string, ""),
+        count : optional(number, 1)
+      }),
+      {}
+    ),
+    resource_labels : optional(map(string), {}),
+    zones : optional(list(string), [])
   }))
   description = "Dask node pools to create. Defaults to notebook_nodes"
   default     = {}
 }
-
-variable "config_connector_enabled" {
-  type        = bool
-  default     = false
-  description = <<-EOT
-  Enable GKE Config Connector to manage GCP resources via kubernetes.
-
-  GKE Config Connector (https://cloud.google.com/config-connector/docs/overview)
-  allows creating GCP resources (like buckets, VMs, etc) via creating Kubernetes
-  Custom Resources. We use this to create buckets on a per-hub level,
-  and could use it for other purposes in the future.
-
-  Enabling this increases base cost, as config connector related pods
-  needs to run on the cluster.
-  EOT
-}
-
 
 variable "cd_sa_roles" {
   type = set(string)
@@ -226,7 +225,7 @@ variable "enable_network_policy" {
 }
 
 variable "user_buckets" {
-  type        = map(object({ delete_after : number }))
+  type        = map(object({ delete_after : number, extra_admin_members : optional(list(string), []) }))
   default     = {}
   description = <<-EOT
   GCS Buckets to be created.
@@ -234,9 +233,16 @@ variable "user_buckets" {
   The key for each entry will be prefixed with {var.prefix}- to form
   the name of the bucket.
 
-  The value is a map, with 'delete_after' the only accepted key in that
-  map - it lists the number of days after which any content in the
-  bucket will be deleted. Set to null to not delete data.
+  The value is a map, accepting the following keys:
+
+  'delete_after' specifies the number of days after which any content
+  in the bucket will be deleted. Set to null to not delete data.
+
+  'extra_admin_members' describes extra identies (user groups, user accounts,
+  service accounts, etc) that will have *full* access to this bucket. This
+  is primarily useful for moving data into and out of buckets from outside
+  the cloud. See https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/storage_bucket_iam#member/members
+  for the format this would be specified in.
   EOT
 }
 
@@ -344,7 +350,15 @@ variable "max_cpu" {
 }
 
 variable "hub_cloud_permissions" {
-  type        = map(object({ requestor_pays : bool, bucket_admin_access : set(string), hub_namespace : string }))
+  type = map(
+    object({
+      requestor_pays : bool,
+      bucket_admin_access : set(string),
+      bucket_readonly_access : optional(set(string), []),
+      bucket_public_access : optional(set(string), []),
+      hub_namespace : string
+    })
+  )
   default     = {}
   description = <<-EOT
   Map of cloud permissions given to a particular hub
@@ -357,15 +371,6 @@ variable "hub_cloud_permissions" {
      This *potentially* incurs cost for us, the originating project, so opt-in.
   2. bucket_admin_access: List of GCS storage buckets that users on this hub should have read
      and write permissions for.
-  EOT
-}
-
-variable "bucket_public_access" {
-  type        = list(any)
-  default     = []
-  description = <<-EOT
-  A list of GCS storage buckets defined in user_buckets that should be granted public read access.
-
   EOT
 }
 
